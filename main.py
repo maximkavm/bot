@@ -1,8 +1,9 @@
-import telebot
 # Создаем экземпляр бота
-import telebot
 import random
+
+import telebot
 from telebot import types
+
 # Загружаем список интересных фактов
 f = open('data/facts.txt', 'r', encoding='UTF-8')
 facts = f.read().split('\n')
