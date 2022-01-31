@@ -1,6 +1,5 @@
 import telebot
 # Создаем экземпляр бота
-#bot = telebot.TeleBot('5104763927:AAEc4bkq7nWqVKzeXOu-YF_Z5SjotTZn_7w')
 import telebot
 import random
 from telebot import types
