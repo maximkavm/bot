@@ -18,8 +18,8 @@ bot = telebot.TeleBot('5104763927:AAEc4bkq7nWqVKzeXOu-YF_Z5SjotTZn_7w')
 def start(m, res=False):
         # Добавляем две кнопки
         markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
-        item1=types.KeyboardButton("Факт")
-        item2=types.KeyboardButton("Поговорка")
+        item1=types.KeyboardButton("Факты")
+        item2=types.KeyboardButton("Поговорки")
         markup.add(item1)
         markup.add(item2)
         bot.send_message(m.chat.id, 'Нажми: \nФакт для получения интересного факта\nПоговорка — для получения мудрой цитаты ',  reply_markup=markup)
