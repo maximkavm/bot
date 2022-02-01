@@ -36,7 +36,7 @@ def handle_text(message):
     if message.text.strip() == 'Факт' :
             answer = random.choice(facts)
     # Если юзер прислал 2, выдаем умную мысль
-    elif message.text.strip() == 'Поговорка':
+    elif message.text.strip() == 'Поговорка1':
             answer = random.choice(thinks)
     elif message.text.strip() == 'Телефоны':
             answer = random.choice(thinks)
