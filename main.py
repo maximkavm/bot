@@ -28,9 +28,11 @@ def start(m, res=False):
     item1 = types.KeyboardButton("Факт")
     item2 = types.KeyboardButton("Поговорка")
     item3 = types.KeyboardButton("Телефоны")
+    item4 = types.KeyboardButton("Телефонная книга")
     markup.add(item1)
     markup.add(item2)
     markup.add(item3)
+    markup.add(item4)
     bot.send_message(m.chat.id,
                      'Нажми: \nФакт для получения интересного факта\nПоговорка — для получения мудрой цитаты ',
                      reply_markup=markup)
@@ -40,6 +42,7 @@ def start(m, res=False):
 @bot.message_handler(content_types=["text"])
 def handle_text(message):
     # Если юзер прислал 1, выдаем ему случайный факт
+    global answer
     if message.text.strip() == 'Факт':
         answer = random.choice(facts)
     # Если юзер прислал 2, выдаем умную мысль
