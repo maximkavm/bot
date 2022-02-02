@@ -289,9 +289,6 @@ async def process_start_command(message: types.Message):
     await message.reply(process.extractOne(fn, str1)[0], reply_markup=greet_kb)
 
 
-
-
-
 @dp.message_handler(commands=['hi1'])
 async def process_hi1_command(message: types.Message):
     await message.reply("Первое - изменяем размер клавиатуры", reply_markup=greet_kb)
