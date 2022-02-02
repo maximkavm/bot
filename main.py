@@ -86,7 +86,7 @@ async def process_start_command(message: types.Message):
     await message.reply(nt(facts), reply_markup=greet_kb)
 
 
-@dp.message_handler(commands=['find'])
+@dp.message_handler(commands=['f'])
 async def process_start_command(message: types.Message):
     fn = ""
     if (message.text != ""):
