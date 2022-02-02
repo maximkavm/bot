@@ -8,30 +8,31 @@ from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
+
 from aiogram.types import ReplyKeyboardRemove, \
     ReplyKeyboardMarkup, KeyboardButton, \
     InlineKeyboardMarkup, InlineKeyboardButton, Message, CallbackQuery
 
+str1 = []
 
-def pb():
-    str1 = []
-    with open("tpbook223.csv", encoding='utf-8') as r_file:
-        # Создаем объект reader, указываем символ-разделитель ","
-        file_reader = csv.reader(r_file, delimiter=";")
-        # Счетчик для подсчета количества строк и вывода заголовков столбцов
-        count = 0
-        # Считывание данных из CSV файла
-        for row in file_reader:
-            if count == 0:
-                # Вывод строки, содержащей заголовки для столбцов
-                print(f'Файл содержит столбцы: {", ".join(row)}')
-            else:
-                # Вывод строк
-                # print(f'    {row[0]} - {row[1]} - {row[2]} -.')
-                str1.append(row[0] + " " + row[1] + " " + row[2] + "\n")
-            count += 1
-        return str1
-
+with open("tpbook3.csv", encoding='utf-8') as r_file:
+    # Создаем объект reader, указываем символ-разделитель ","
+    file_reader = csv.reader(r_file, delimiter=";")
+    # Счетчик для подсчета количества строк и вывода заголовков столбцов
+    count = 0
+    # Считывание данных из CSV файла
+    for row in file_reader:
+        if count == 0:
+            # Вывод строки, содержащей заголовки для столбцов
+            pass
+            # print(f'Файл содержит столбцы: {", ".join(row)}')
+        else:
+            # Вывод строк
+            # print(f'    {row[0]} - {row[1]} - {row[2]} -.')
+            str1.append(row[0] + " " + row[1] + " " + row[2] + "\n")
+        count += 1
 
 # Загружаем список интересных фактов
 f = open('data/facts.txt', 'r', encoding='UTF-8')
@@ -79,11 +80,20 @@ greet_kb = ReplyKeyboardMarkup()
 greet_kb.add(button_hi)
 greet_kb.add(button_tf)
 
-str1 = pb()
 
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
     await message.reply(nt(facts), reply_markup=greet_kb)
+
+
+@dp.message_handler(commands=['find'])
+async def process_start_command(message: types.Message):
+    fn = ""
+    if (message.text != ""):
+        s = message.text.split()
+        if (len(s) > 1):
+            fn = s[1]
+    await message.reply(process.extractOne(fn, str1)[0], reply_markup=greet_kb)
 
 
 @dp.message_handler(commands=['hi1'])
@@ -98,7 +108,7 @@ async def process_hi1_command(message: types.Message):
 
 @dp.message_handler(commands=['hi3'])
 async def process_hi1_command(message: types.Message):
-       await message.reply(str1)
+    await message.reply(str1)
 
 
 # Хэндлер на команду /test1
