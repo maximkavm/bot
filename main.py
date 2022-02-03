@@ -22,8 +22,6 @@ from aiogram.types import ReplyKeyboardRemove, \
 
 logging.basicConfig(level=logging.INFO)
 
-
-
 # Объект бота
 bot = Bot(token="5104763927:AAEc4bkq7nWqVKzeXOu-YF_Z5SjotTZn_7w")
 
@@ -31,7 +29,6 @@ bot = Bot(token="5104763927:AAEc4bkq7nWqVKzeXOu-YF_Z5SjotTZn_7w")
 
 # Включаем логирование, чтобы не пропустить важные сообщения
 logging.basicConfig(level=logging.INFO)
-
 
 # For example use simple MemoryStorage for Dispatcher.
 storage = MemoryStorage()
@@ -143,10 +140,6 @@ dp = Dispatcher(bot, storage=storage)
 #
 
 
-
-
-
-
 ###########################################################################################
 
 str1 = []
@@ -195,8 +188,6 @@ greet_kb.add(button_hi)
 
 BotDB = BotDB('accountant.db')
 
-
-
 from aiogram.types import ReplyKeyboardRemove, \
     ReplyKeyboardMarkup, KeyboardButton, \
     InlineKeyboardMarkup, InlineKeyboardButton
@@ -208,9 +199,6 @@ button_an = KeyboardButton('Анекдот')
 greet_kb = ReplyKeyboardMarkup()
 
 greet_kb = ReplyKeyboardMarkup(resize_keyboard=True).add(button_hi).add(button_tf).add(button_an)
-
-
-
 
 
 # greet_kb= ReplyKeyboardMarkup(resize_keyboard=True).add(button_tf)
@@ -259,6 +247,13 @@ def anekd():
     return row[1]
 
 
+strupc = "Учебно-производственный центр — один из лидеров образовательных подразделений ПАО «Газпром» в реализации " \
+         "системы фирменного профессионального образования персонала, является школой инженерной культуры. В " \
+         "структуре ООО «Газпром трансгаз Югорск» Учебно-производственный центр функционирует с 1979 года. \nВ центре " \
+         "проводится обучение и развитие руководителей и специалистов компании, повышение квалификации, " \
+         "профессиональная переподготовка, предаттестационная подготовка и аттестация, оценочные и развивающие " \
+         "мероприятия, тематические и консультационные семинары, дистанционное обучение. "
+
 
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
@@ -279,6 +274,7 @@ async def process_start_command(message: types.Message):
 
 import aiogram.utils.markdown as fmt
 
+
 @dp.message_handler(commands=['f'])
 async def process_start_command(message: types.Message):
     fn = message.text
@@ -286,28 +282,37 @@ async def process_start_command(message: types.Message):
         s = message.text.split()
         if (len(s) > 1):
             fn = s[1]
-    #await message.reply(process.extractOne(fn, str1)[0], reply_markup=greet_kb)
+    # await message.reply(process.extractOne(fn, str1)[0], reply_markup=greet_kb)
     await message.answer(
-            fmt.text(
-                fmt.text(fmt.hunderline("Яблоки"), ", вес 1 кг."),
-                fmt.text("Старая цена:", fmt.hstrikethrough(50), "рублей"),
-                fmt.text("Новая цена:", fmt.hbold(25), "рублей"),
-                sep="\n"
-            ), parse_mode="HTML"
-        )
+        fmt.text(
+            fmt.text(fmt.hunderline("Яблоки"), ", вес 1 кг."),
+            fmt.text("Старая цена:", fmt.hstrikethrough(50), "рублей"),
+            fmt.text("Новая цена:", fmt.hbold(25), "рублей"),
+            sep="\n"
+        ), parse_mode="HTML"
+    )
 
 
 
 
 
-@dp.message_handler(commands=['Телефонная книга УПЦ'])
-async def process_start_command(message: types.Message):
-    fn = "МЕ"
-    if (message.text != ""):
-        s = message.text.split()
-        if (len(s) > 1):
-            fn = s[1]
-    await message.reply(process.extractOne(fn, str1)[0], reply_markup=greet_kb)
+
+@dp.message_handler(content_types=['text'])
+async def ande1(message: types.Message):
+    if (message.text == "Информация об УПЦ 👋"):
+        await message.reply(strupc, reply_markup=greet_kb)
+    if (message.text == "Анекдот"):
+        await message.reply(anekd(), reply_markup=greet_kb)
+    if (message.text == "Телефонная книга УПЦ"):
+        # print(*str1)
+        # fn = "МЕ"
+        # if (message.text != ""):
+        #     s = message.text.split()
+        #     if (len(s) > 1):
+        #         fn = s[1]
+
+        for i in str1:
+            await message.reply(i, reply_markup=greet_kb)
 
 
 @dp.message_handler(commands=['hi1'])
@@ -344,9 +349,6 @@ async def process_help_command(message: types.Message):
 @dp.message_handler()
 async def echo_message(msg: types.Message):
     await bot.send_message(msg.from_user.id, msg.text)
-
-
-
 
 
 if __name__ == "__main__":
