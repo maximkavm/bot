@@ -43,8 +43,29 @@ with open("tpbook3.csv", encoding='utf-8') as r_file:
         else:
             # Вывод строк
             # print(f'    {row[0]} - {row[1]} - {row[2]} -.')
-            str1.append(row[0] + " " + row[1] + " " + row[2] + "\n")
+            str1.append(row[0] + " " + row[1] + " " + row[2])
         count += 1
+
+strtb = []
+
+with open("tb1.csv", encoding='utf-8') as r_file:
+    # Создаем объект reader, указываем символ-разделитель ","
+    file_reader = csv.reader(r_file, delimiter=";")
+    # Счетчик для подсчета количества строк и вывода заголовков столбцов
+    count = 0
+    # Считывание данных из CSV файла
+    for row in file_reader:
+        if count == 0:
+            # Вывод строки, содержащей заголовки для столбцов
+            pass
+            # print(f'Файл содержит столбцы: {", ".join(row)}')
+        else:
+            # Вывод строк
+            # print(f'    {row[0]} - {row[1]} - {row[2]} -.')
+            strtb.append(row[0] + " " + row[1] + " " + row[2] + "\n")
+        count += 1
+
+
 
 # Загружаем список интересных фактов
 f = open('data/facts.txt', 'r', encoding='UTF-8')
@@ -55,17 +76,11 @@ f = open('data/thinks.txt', 'r', encoding='UTF-8')
 thinks = f.read().split('\n')
 f.close()
 
-
 def nt(str1):
     answer = random.choice(str1)
     return answer
 
 import aiogram.utils.markdown as fmt
-
-# Загружаем список поговорок
-f = open('data/telefon.txt', 'r', encoding='UTF-8')
-telf = f.read().split('\n')
-f.close()
 
 button_hi = KeyboardButton('Привет! 👋')
 
