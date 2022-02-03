@@ -34,7 +34,6 @@ logging.basicConfig(level=logging.INFO)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
-
 strt = []
 
 with open("tb1.csv", encoding='utf-8') as r_file:
@@ -65,6 +64,20 @@ with open("tpbook3.csv", encoding='utf-8') as r_file:
         else:
             str1.append(row[0] + " " + row[1] + " " + row[2])
         count += 1
+
+strttg = []
+
+with open("ttgbook1.csv", encoding='utf-8') as r_file:
+    file_reader = csv.reader(r_file, delimiter=";")
+    count = 0
+    for row in file_reader:
+        if count == 0:
+            pass
+        else:
+            strttg.append(row[0] + " " + row[1] + " " + row[2])
+        count += 1
+
+
 
 # Загружаем список интересных фактов
 f = open('data/facts.txt', 'r', encoding='UTF-8')
@@ -128,7 +141,6 @@ async def callback(callback_query: types.CallbackQuery):
     await bot.send_message(callback_query.from_user.id, text=callback_query.data)
 
 
-
 def anekd():
     connection = sqlite3.connect('anekdot.db')
     cursor = connection.cursor()
@@ -176,8 +188,8 @@ async def process_start_command(message: types.Message):
             fn = s[1]
         # process.extract(fn, str1)
         lse = ""
-        for i in process.extract(fn, str1):
-            lse +=i[0] + " "+ "\n" + " "+ "\n"
+        for i in process.extract(fn, str1,  limit= 15):
+            lse += i[0] + " " + "\n" + " " + "\n"
     await message.answer(
         fmt.text(
             fmt.text(lse),
@@ -196,8 +208,26 @@ async def process_start_command(message: types.Message):
             fn = s[1]
         # process.extract(fn, strt)
         lse = ""
-        for i in process.extract(fn, strt):
-            lse +=i[0] + " "+ "\n" + " "+ "\n"
+        for i in process.extract(fn, strt,  limit= 15):
+            lse += i[0] + " " + "\n" + " " + "\n"
+    await message.answer(
+        fmt.text(
+            fmt.text(lse),
+            sep="\n"
+        ), parse_mode="HTML"
+
+    )
+
+@dp.message_handler(commands=['fg'])
+async def process_start_command(message: types.Message):
+    fn = message.text
+    if (message.text != ""):
+        s = message.text.split()
+        if (len(s) > 1):
+            fn = s[1]
+        lse = ""
+        for i in process.extract(fn, strttg,  limit= 15):
+            lse += i[0] + " " + "\n" + " " + "\n"
     await message.answer(
         fmt.text(
             fmt.text(lse),
