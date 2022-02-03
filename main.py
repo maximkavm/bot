@@ -1,5 +1,7 @@
 import random
 import csv
+import sqlite3
+
 from db import BotDB
 
 import logging
@@ -200,11 +202,15 @@ from aiogram.types import ReplyKeyboardRemove, \
     InlineKeyboardMarkup, InlineKeyboardButton
 
 button_hi = KeyboardButton('Информация об УПЦ 👋')
-button_tf = KeyboardButton('/Телефонная книга УПЦ')
+button_tf = KeyboardButton('Телефонная книга УПЦ')
+button_an = KeyboardButton('Анекдот')
 
 greet_kb = ReplyKeyboardMarkup()
 
-greet_kb = ReplyKeyboardMarkup(resize_keyboard=True).add(button_hi).add(button_tf)
+greet_kb = ReplyKeyboardMarkup(resize_keyboard=True).add(button_hi).add(button_tf).add(button_an)
+
+
+
 
 
 # greet_kb= ReplyKeyboardMarkup(resize_keyboard=True).add(button_tf)
@@ -243,21 +249,35 @@ async def callback(callback_query: types.CallbackQuery):
 #     )
 
 
+def anekd():
+    connection = sqlite3.connect('anekdot.db')
+    cursor = connection.cursor()
+    z = random.randrange(1, 9000, 1)
+    cursor.execute('SELECT * FROM anekdot WHERE rowid=' + str(z))
+    row = cursor.fetchone()
+    connection.close()
+    return row[1]
+
+
+
 @dp.message_handler(commands=['start'])
 async def process_start_command(message: types.Message):
-    await message.reply("Этот бот создал Юрий Казанцев.\n Это справочник телефонных номеров УПЦ.",
+    await message.reply("Этот информационный бот УПЦ.\n Это справочник телефонных номеров УПЦ.",
                         reply_markup=greet_kb)
+    await message.reply(anekd(), reply_markup=greet_kb)
     await bot.send_photo(
         chat_id=message.from_user.id,
-        photo="https://devka.top/uploads/posts/2020-10/1603340966_45-p-mokrie-siski-porno-65.jpg",
+        photo="https://lolkot.ru/lolmixer/gallery/images/90d57bdba0f87df670914f90a858b76a1374987601.jpg",
         # reply_markup=keyboard([
         #     [message.from_user.id, "кнопка1", "/f" + "ПЕР", None],
         #     ["22", "кнопка2", "текст сообщения", None],
         #     ["32", "кнопка3", "текст сообщения", None]
         # ]),
-        caption="Телефонная книга УПЦ и сиськи"
+        caption="Телефонная книга УПЦ. Для поиска телефона нажмите кнопку меню, нажмите Найти и подержите две секунды."
     )
 
+
+import aiogram.utils.markdown as fmt
 
 @dp.message_handler(commands=['f'])
 async def process_start_command(message: types.Message):
@@ -266,7 +286,18 @@ async def process_start_command(message: types.Message):
         s = message.text.split()
         if (len(s) > 1):
             fn = s[1]
-    await message.reply(process.extractOne(fn, str1)[0], reply_markup=greet_kb)
+    #await message.reply(process.extractOne(fn, str1)[0], reply_markup=greet_kb)
+    await message.answer(
+            fmt.text(
+                fmt.text(fmt.hunderline("Яблоки"), ", вес 1 кг."),
+                fmt.text("Старая цена:", fmt.hstrikethrough(50), "рублей"),
+                fmt.text("Новая цена:", fmt.hbold(25), "рублей"),
+                sep="\n"
+            ), parse_mode="HTML"
+        )
+
+
+
 
 
 @dp.message_handler(commands=['Телефонная книга УПЦ'])
@@ -313,6 +344,9 @@ async def process_help_command(message: types.Message):
 @dp.message_handler()
 async def echo_message(msg: types.Message):
     await bot.send_message(msg.from_user.id, msg.text)
+
+
+
 
 
 if __name__ == "__main__":
