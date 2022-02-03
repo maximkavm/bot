@@ -34,117 +34,10 @@ logging.basicConfig(level=logging.INFO)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
-#
-# # States
-# class Form(StatesGroup):
-#     name = State()  # Will be represented in storage as 'Form:name'
-#     age = State()  # Will be represented in storage as 'Form:age'
-#     gender = State()  # Will be represented in storage as 'Form:gender'
-#
-#
-# @dp.message_handler(commands='start')
-# async def cmd_start(message: types.Message):
-#     """
-#     Conversation's entry point
-#     """
-#     # Set state
-#     await Form.name.set()
-#
-#     await message.reply("Hi there! What's your name?")
-#
-#
-# # You can use state '*' if you need to handle all states
-# @dp.message_handler(state='*', commands='cancel')
-# @dp.message_handler(Text(equals='cancel', ignore_case=True), state='*')
-# async def cancel_handler(message: types.Message, state: FSMContext):
-#     """
-#     Allow user to cancel any action
-#     """
-#     current_state = await state.get_state()
-#     if current_state is None:
-#         return
-#
-#     logging.info('Cancelling state %r', current_state)
-#     # Cancel state and inform user about it
-#     await state.finish()
-#     # And remove keyboard (just in case)
-#     await message.reply('Cancelled.', reply_markup=types.ReplyKeyboardRemove())
-#
-#
-# @dp.message_handler(state=Form.name)
-# async def process_name(message: types.Message, state: FSMContext):
-#     """
-#     Process user name
-#     """
-#     async with state.proxy() as data:
-#         data['name'] = message.text
-#
-#     await Form.next()
-#     await message.reply("How old are you?")
-#
-#
-# # Check age. Age gotta be digit
-# @dp.message_handler(lambda message: not message.text.isdigit(), state=Form.age)
-# async def process_age_invalid(message: types.Message):
-#     """
-#     If age is invalid
-#     """
-#     return await message.reply("Age gotta be a number.\nHow old are you? (digits only)")
-#
-#
-# @dp.message_handler(lambda message: message.text.isdigit(), state=Form.age)
-# async def process_age(message: types.Message, state: FSMContext):
-#     # Update state and data
-#     await Form.next()
-#     await state.update_data(age=int(message.text))
-#
-#     # Configure ReplyKeyboardMarkup
-#     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
-#     markup.add("Male", "Female")
-#     markup.add("Other")
-#
-#     await message.reply("What is your gender?", reply_markup=markup)
-#
-#
-# @dp.message_handler(lambda message: message.text not in ["Male", "Female", "Other"], state=Form.gender)
-# async def process_gender_invalid(message: types.Message):
-#     """
-#     In this example gender has to be one of: Male, Female, Other.
-#     """
-#     return await message.reply("Bad gender name. Choose your gender from the keyboard.")
-#
-#
-# @dp.message_handler(state=Form.gender)
-# async def process_gender(message: types.Message, state: FSMContext):
-#     async with state.proxy() as data:
-#         data['gender'] = message.text
-#
-#         # Remove keyboard
-#         markup = types.ReplyKeyboardRemove()
-#
-#         # And send message
-#         await bot.send_message(
-#             message.chat.id,
-#             md.text(
-#                 md.text('Hi! Nice to meet you,', md.bold(data['name'])),
-#                 md.text('Age:', md.code(data['age'])),
-#                 md.text('Gender:', data['gender']),
-#                 sep='\n',
-#             ),
-#             reply_markup=markup,
-#             parse_mode=ParseMode.MARKDOWN,
-#         )
-#
-#     # Finish conversation
-#     await state.finish()
-#
 
+strt = []
 
-###########################################################################################
-
-str1 = []
-
-with open("tpbook3.csv", encoding='utf-8') as r_file:
+with open("tb1.csv", encoding='utf-8') as r_file:
     # Создаем объект reader, указываем символ-разделитель ","
     file_reader = csv.reader(r_file, delimiter=";")
     # Счетчик для подсчета количества строк и вывода заголовков столбцов
@@ -158,7 +51,19 @@ with open("tpbook3.csv", encoding='utf-8') as r_file:
         else:
             # Вывод строк
             # print(f'    {row[0]} - {row[1]} - {row[2]} -.')
-            str1.append(row[0] + " " + row[1] + " " + row[2] + "\n")
+            strt.append(row[0] + " " + row[1] + " " + row[2] + "\n")
+        count += 1
+
+str1 = []
+
+with open("tpbook3.csv", encoding='utf-8') as r_file:
+    file_reader = csv.reader(r_file, delimiter=";")
+    count = 0
+    for row in file_reader:
+        if count == 0:
+            pass
+        else:
+            str1.append(row[0] + " " + row[1] + " " + row[2])
         count += 1
 
 # Загружаем список интересных фактов
@@ -223,19 +128,6 @@ async def callback(callback_query: types.CallbackQuery):
     await bot.send_message(callback_query.from_user.id, text=callback_query.data)
 
 
-# @dp.message_handler(commands=['start'])
-# async def process_admin_command(message: types.Message):
-#     await bot.send_photo(
-#        chat_id=message.from_user.id,
-#        photo="https://devka.top/uploads/posts/2020-10/1603340966_45-p-mokrie-siski-porno-65.jpg",
-#         reply_markup=keyboard([
-#             [message.from_user.id, "кнопка1", "/f" + "ПЕР", None],
-#             ["22", "кнопка2", "текст сообщения", None],
-#             ["32", "кнопка3", "текст сообщения", None]
-#         ]),
-#         caption="Телефонная книга УПЦ и сиськи"
-#     )
-
 
 def anekd():
     connection = sqlite3.connect('anekdot.db')
@@ -282,18 +174,37 @@ async def process_start_command(message: types.Message):
         s = message.text.split()
         if (len(s) > 1):
             fn = s[1]
+        # process.extract(fn, str1)
+        lse = ""
+        for i in process.extract(fn, str1):
+            lse +=i[0] + " "+ "\n" + " "+ "\n"
     await message.answer(
         fmt.text(
-            fmt.text(process.extractOne(fn, str1)[0]),
-            fmt.text(process.extract(fn, str1)),
-            # fmt.text(process.extractOne(fn, str1[2])),
+            fmt.text(lse),
             sep="\n"
         ), parse_mode="HTML"
+
     )
 
 
+@dp.message_handler(commands=['ft'])
+async def process_start_command(message: types.Message):
+    fn = message.text
+    if (message.text != ""):
+        s = message.text.split()
+        if (len(s) > 1):
+            fn = s[1]
+        # process.extract(fn, strt)
+        lse = ""
+        for i in process.extract(fn, strt):
+            lse +=i[0] + " "+ "\n" + " "+ "\n"
+    await message.answer(
+        fmt.text(
+            fmt.text(lse),
+            sep="\n"
+        ), parse_mode="HTML"
 
-
+    )
 
 
 @dp.message_handler(content_types=['text'])
