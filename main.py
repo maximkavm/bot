@@ -282,12 +282,11 @@ async def process_start_command(message: types.Message):
         s = message.text.split()
         if (len(s) > 1):
             fn = s[1]
-    # await message.reply(process.extractOne(fn, str1)[0], reply_markup=greet_kb)
     await message.answer(
         fmt.text(
-            fmt.text(fmt.hunderline("Яблоки"), ", вес 1 кг."),
-            fmt.text("Старая цена:", fmt.hstrikethrough(50), "рублей"),
-            fmt.text("Новая цена:", fmt.hbold(25), "рублей"),
+            fmt.text(process.extractOne(fn, str1)[0]),
+            fmt.text(process.extract(fn, str1)),
+            # fmt.text(process.extractOne(fn, str1[2])),
             sep="\n"
         ), parse_mode="HTML"
     )
