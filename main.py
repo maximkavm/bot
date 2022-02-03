@@ -304,13 +304,6 @@ async def ande1(message: types.Message):
     if (message.text == "Анекдот"):
         await message.reply(anekd(), reply_markup=greet_kb)
     if (message.text == "Телефонная книга УПЦ"):
-        # print(*str1)
-        # fn = "МЕ"
-        # if (message.text != ""):
-        #     s = message.text.split()
-        #     if (len(s) > 1):
-        #         fn = s[1]
-
         for i in str1:
             await message.reply(i, reply_markup=greet_kb)
 
