@@ -67,7 +67,7 @@ with open("tpbook3.csv", encoding='utf-8') as r_file:
 
 strttg = []
 
-with open("ttgbook1.csv", encoding='utf-8') as r_file:
+with open("ttgbook2.csv", encoding='utf-8') as r_file:
     file_reader = csv.reader(r_file, delimiter=";")
     count = 0
     for row in file_reader:
